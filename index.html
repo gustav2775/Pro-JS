@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Интернет-магазин</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="logo">Интернет-магазин</div>
+            <div class="cart">
+
+                <form action="#" class="search-form" @submit.prevent="filterGoods">
+                    <input type="text" class="search-field" v-model="userSearch">
+                    <button class="btn-search" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+
+                <button class="btn-cart" type="button" @click="showCart = !showCart"> Корзина </button>
+                <div class="bascet" v-show="showCart">
+                    <div class="err" v-if='productsInBascet.length === 0'> Нет товаров</div>
+                    <div class="bascetProdBascet" v-for="product of productsInBascet">
+                        <img :src="imgBascetProd" alt="Some img">
+                        <h4>{{product.product_name}}</h4>
+                        <div class="deck">
+                            <p class="price">Цена за ед. {{product.price}}₽</p>
+                            <p class="quantity">Колличество: {{product.quantity}} </p>
+                        </div>
+                        <p class="prodSum">{{product.quantity *product.price}} ₽ </p>
+                        <button class="btnDelete" @click="remove(product)">Del</button>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+        <main>
+            <div class="products">
+                <div class="product-item" v-for="product of positiveFilter" :key="product.id_product">
+                    <img :src="imgCatalog" alt="Some img">
+                    <div class="desc">
+                        <h3>{{product.product_name}}</h3>
+                        <p>{{product.price}}₽</p>
+                        <button class="buy-btn" @click="addProduct(product)">Купить</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"
+        integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
