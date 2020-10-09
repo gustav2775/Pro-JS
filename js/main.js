@@ -62,17 +62,16 @@ const app = new Vue({
     this.getJson(`${API + this.catalogUrl}`).then((data) => {
       for (let el of data) {
         this.products.push(el);
-
       }
     });
     // чтобы при загрузке страницы были ведны все товары
     if(this.positiveFilter.length === 0) this.positiveFilter = this.products;
 
     //Не могу разобраться почему выдает data is not iterable. Прошу объясните.
-    /* this.getJson(`${API + this.bascerProdURl}`).then((data) => {
-      for (let el of data) {
+    this.getJson(`${API + this.bascerProdURl}`).then((data) => {
+      for (let el of data.contents) {
         this.productsInBascet.push(el);
       }
-    });  */
+    }); 
   },
 });
