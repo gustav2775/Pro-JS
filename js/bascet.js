@@ -1,47 +1,77 @@
-Vue.component("productInBasket", {
-  prop: [],
+Vue.component("products_basket", {
   data() {
     return {
       showCart: false,
-      catalogUrl: "/catalogData.json",
-      bascerProdUrl: "/getBasket.json",
-      imgBascetProd: "https://placehold.it/50x50",
-      productsInBascet: [],
+      baskerProdURl: "/getBasket.json",
+      imgBasketProd: "https://placehold.it/50x50",
+      products_in_basket: [],
     };
   },
+  
   methods: {
     addProduct(product) {
       //ищу совпадения в массиве по id
-      let trueProduct = this.productsInBascet.find(
+      let trueProduct = this.products_in_basket.find(
         (e) => e.id_product === product.id_product
       );
       if (trueProduct) {
         trueProduct.quantity++;
       } else {
-        this.productsInBascet.push({ ...product, quantity: 1 });
+        this.products_in_basket.push({ ...product, quantity: 1 });
       }
+  
     },
-
+ 
     remove(product) {
       if (product.quantity > 1) {
         product.quantity--;
       } else {
-        this.productsInBascet.splice(this.productsInBascet.indexOf(product), 1);
+        this.products_in_basket.splice(
+          this.products_in_basket.indexOf(product),
+          1
+        );
       }
     },
   },
-  template: ` <button class="btn-cart" type="button" @click="showCart = !showCart"> Корзина </button>
-            <div class="bascet" v-show="showCart">
-                <div class="err" v-if='productsInBascet.length === 0'> Нет товаров</div>
-                <div class="bascetProdBascet" v-for="product of productsInBascet">
-                <img :src="imgBascetProd" alt="Some img">
-                <h4>{{product.product_name}}</h4>
-                <div class="deck">
-                    <p class="price">Цена за ед. {{product.price}}₽</p>
-                    <p class="quantity">Колличество: {{product.quantity}} </p>
-                </div>
-                <p class="prodSum">{{product.quantity *product.price}} ₽ </p>
-                <button class="btnDelete" @click="remove(product)">Del</button>
+
+  mounted() {
+    this.$parent.getJson(`${API + this.baskerProdURl}`).then((data) => {
+      for (let el of data.contents) {
+        this.products_in_basket.push(el);
+      }
+    });
+  },
+
+  template: `<div>
+                <button class="btn-cart" type="button" @click="showCart = !showCart">Корзина</button>
+                <div class="cart-block" v-show="showCart" >
+                <p v-if="!products_in_basket.length">Корзина пуста</p>
+                <prod_basket class="cart-item" 
+                        v-for="item of products_in_basket" 
+                        :key="item.id_product"
+                        :cart-item="item" 
+                        :img="imgBasketProd"
+                        @remove="remove">
+                </prod_basket>
             </div>
-            </div>`,
+        </div>`
+});
+
+Vue.component('prod_basket', {
+    props: ['cartItem', 'img'],
+    template: `
+      <div class="cart-item">
+        <div class="product-bio">
+          <img :src="img" alt="Some image">
+            <div class="product-desc">
+              <p class="product-title">{{cartItem.product_name}}</p>
+              <p class="product-quantity">Количество: {{cartItem.quantity}}</p>
+              <p class="product-single-price">{{cartItem.price}}₽ за единицу</p>
+            </div>
+        </div>
+        <div class="right-block">
+          <p class="product-price">{{cartItem.quantity*cartItem.price}}₽</p>
+          <button class="del-btn" @click="$emit('remove', cartItem)">&times;</button>
+        </div>
+      </div>`
 });

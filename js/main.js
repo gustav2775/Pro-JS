@@ -3,16 +3,11 @@ const API =
 
 const app = new Vue({
   el: "#app",
-  data: {
-    showCart: false,
-    catalogUrl: "/catalogData.json",
-    bascerProdURl: "/getBasket.json",
-    products: [],
-    imgCatalog: "https://placehold.it/200x150",
-    imgBascetProd: "https://placehold.it/50x50",
-    productsInBascet: [],
-    positiveFilter : [],
-    userSearch:'',
+  data() {
+    return {
+      products: [],
+      positiveFilter: [],
+    };
   },
   methods: {
     getJson(url) {
@@ -22,56 +17,18 @@ const app = new Vue({
           console.log(error);
         });
     },
-
-    addProduct(product) {
-      //ищу совпадения в массиве по id
-      let trueProduct = this.productsInBascet.find( e => e.id_product === product.id_product);
-      if (trueProduct) {
-        trueProduct.quantity++;
-      } else {
-        this.productsInBascet.push({ ...product, quantity: 1 });
-      }
-    },
-
-    remove(product){
-      if ( product.quantity > 1){
-        product.quantity --
-      }else{
-        this.productsInBascet.splice(this.productsInBascet.indexOf(product),1)
-      }
-    },
-
-    /* bascetName() {
-      if (productsInBascet.length === 0) {
-        this.btnBasketName = "Корзина пуста";
-      } else {
-        this.btnBasketName = `В корзине ${productsInBascet.length} товаров`;
-      }
-    }, */
-    
-    filterGoods(){
-      //создаю регулярное выражение
-      let regexp = new RegExp(this.userSearch, 'i');
-      //с помощью метода filter перебираю массив и ищу совпадения. Пложительные значение записываю в массив.
-      this.positiveFilter = this.products.filter(e => regexp.test(e.product_name));
-      if(this.positiveFilter.lenght === 0) this.positiveFilter.lenght = this.products
-    }
   },
-
-  mounted() {
-    this.getJson(`${API + this.catalogUrl}`).then((data) => {
-      for (let el of data) {
-        this.products.push(el);
-      }
-    });
-    // чтобы при загрузке страницы были ведны все товары
-    if(this.positiveFilter.length === 0) this.positiveFilter = this.products;
-
-    //Не могу разобраться почему выдает data is not iterable. Прошу объясните.
-    this.getJson(`${API + this.bascerProdURl}`).then((data) => {
-      for (let el of data.contents) {
-        this.productsInBascet.push(el);
-      }
-    }); 
-  },
+  template: `
+    <div>
+      <header>
+        <div class="logo">Интернет-магазин</div>
+        <div class="cart">
+          <search_form ref = 'search_form'></search_form> 
+          <products_basket ref='products_basket'></products_basket>
+        </div>
+      </header>
+      <main>
+        <market ref="market"></market>
+      </main>
+    </div> `,
 });

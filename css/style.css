@@ -77,6 +77,8 @@ img {
 }
 .cart{
     position: relative;
+    display:flex;
+    
 }
 .cart-block{
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.62);
