@@ -1,5 +1,6 @@
 body{
     font-family: 'SF Pro Display', sans-serif;
+    
 }
 header{
     position: relative;
@@ -185,4 +186,13 @@ img {
     font-size: 20px;
     font-weight: 700;
     padding: 40px 80px;
+}
+.errors{
+    width: 100vw;
+    height: 500px;
+    color: red;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

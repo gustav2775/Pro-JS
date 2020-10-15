@@ -12,9 +12,9 @@ const app = new Vue({
   methods: {
     getJson(url) {
       return fetch(url)
-        .then((result) => result.json())
+        .then((result) => result1.json())
         .catch((error) => {
-          console.log(error);
+          this.$refs.errors.error(error);
         });
     },
   },
@@ -27,6 +27,7 @@ const app = new Vue({
           <products_basket ref='products_basket'></products_basket>
         </div>
       </header>
+      <errors ref="errors"></errors>
       <main>
         <market ref="market"></market>
       </main>
